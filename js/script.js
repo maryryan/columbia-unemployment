@@ -3,7 +3,7 @@ var margin = {top: 20, right: 20, bottom: 30, left: 50};
 var width = $(".chart").width() - margin.left - margin.right;
 var height = $(".chart").height() - margin.top - margin.bottom;
 
-var formatDate = d3.time.format("%Y-%d-%m");
+var formatDate = d3.time.format("%Y-%m-%d");
 
 // DEFINE SCALES
 var x = d3.time.scale()
@@ -23,7 +23,7 @@ var yAxis = d3.svg.axis()
 
 // APPEND SVG AND AXES GROUPS TO THE DOM
 var line = d3.svg.line()
-    .x(function(d) { return x(d.observation_date); })
+    .x(function(d) { return x(formatDate.parse(d.observation_date)); })
     .y(function(d) { return y(d.CLMUR); });
 
 var svg = d3.select(".chart").append("svg")
@@ -40,7 +40,7 @@ d3.csv("data/columbia_unemployment.csv", function(error, data) {
   if (error) throw error;
 
 // PREPARE DATA
-  x.domain(d3.extent(data, function(d) { return d.observation_date; }));
+  x.domain(d3.extent(data, function(d) { return formatDate.parse(d.observation_date); }));
   y.domain(d3.extent(data, function(d) { return d.CLMUR; }));
 
   svg.append("g")
